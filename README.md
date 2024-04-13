@@ -2,7 +2,7 @@
 Ontology Explorer
 
 ## Description
-Ontology Explorer is a Python-based command-line tool designed to interact with the Ontology Lookup Service API provided by EBI. The tool fetches detailed information about a specified ontology based on its ID and displays it in either human-readable or machine-readable format.
+Ontology Explorer is a Python-based command-line tool designed to interact with the Ontology Lookup Service API provided by EBI. The tool fetches detailed information about a specified ontology based on its ID and displays it in either human-readable or machine-readable format (json format).
 
 ### Usage
 
