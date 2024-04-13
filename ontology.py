@@ -8,30 +8,38 @@ def fetch_information(onto_id):
         print("Connection successful")
     return response
 
-# get json response
-# print(response)
-
-def display_information(response):
-    #title
+def display_information(response, output_read):
     title = response['config']['title']
-    print("Title:\n", title)
-
-    #description
     description = response['config']['description']
-    print("Description:\n", description)
-
-    #number of terms
     num_of_terms = response['numberOfTerms']
-    print("Number of terms:", num_of_terms)
-
-    #current status
     current_status = response['status']
-    print("Current status:", current_status)
+
+    if output_read == 'human':
+        print("Title:\n", title)      
+        print("Description:\n", description)
+        print("Number of terms:", num_of_terms)
+        print("Current status:", current_status)
+
+    elif output_read == 'machine':
+        # Create a list with the variables
+        info_list = [title, description, num_of_terms, current_status]
+        
+        # Write information into a text file
+        with open("machine.txt", "w") as f:
+            category = ['title', 'description', 'numberOfTerms', 'status']
+            for key, value in zip(category, info_list):
+                f.write(f"{key}: {value}\n")
+                print(f"{key}: {value}")
+    else:
+        print("Invalid output format specified. Please use 'human' or 'machine'.")
+        sys.exit(1)
 
 def main():
+    
     onto_id = sys.argv[1]
+    output_form = sys.argv[2]
     data = fetch_information(onto_id)
-    display_information(data)
+    display_information(data, output_form)
 
 if __name__ == "__main__":
     main()
