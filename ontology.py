@@ -1,20 +1,30 @@
 import requests
 import sys
+import logging
+
+#constants
+API_URL = 'https://www.ebi.ac.uk/ols4/api/ontologies/{onto_id}'
+OUTPUT_FILE = 'machine.txt' #can change into other names
+
+#configure logging
+logging.basicConfig(level=logging.INFO)
 
 def fetch_information(onto_id):
+    """Fetch ontology information from the API."""
     try:
-        url = requests.get(f'https://www.ebi.ac.uk/ols4/api/ontologies/{onto_id}')
+        url = requests.get(API_URL.format(onto_id=onto_id))
         response = url.json()
-        print("Connection successful")
+        logging.info("Connection to API successful")
         return response
-    except requests.RequestException as e:  #error handling for HTTp requests
-        print(f"Error fetching data: {e}")
+    except requests.RequestException as e:  
+        logging.error(f"Error fetching data: {e}")
         sys.exit(1)
-    except ValueError as e:     #error handling for JSON parsing
-        print(f"Error parsing JSON: {e}")
+    except ValueError as e:     
+        logging.error(f"Error parsing JSON: {e}")
         sys.exit(1)
 
 def display_information(response, output_read):
+    """Display ontology information based on the output format."""
     try:
         title = response['config']['title']
         description = response['config']['description']
@@ -32,25 +42,25 @@ def display_information(response, output_read):
             info_list = [title, description, num_of_terms, current_status]
             
             # Write information into a text file
-            with open("machine.txt", "w") as f:
+            with open(OUTPUT_FILE, "w") as f:
                 category = ['title', 'description', 'numberOfTerms', 'status']
                 for key, value in zip(category, info_list):
                     f.write(f"{key}: {value}\n")
                     print(f"{key}: {value}")
         else:
-            print("Invalid output format specified. Please use 'human' or 'machine'.")
+            logging.error("Invalid output format specified. Please use 'human' or 'machine'.")
             sys.exit(1)
     except KeyError as e:
-        print(f"Error accessing response data: {e}")
+        logging.error(f"Error accessing data: Ontology ID not recognized.")
         sys.exit(1)
     except IOError as e:
-        print(f"Error writing to file: {e}")
+        logging.error(f"Error writing to file: {e}")
         sys.exit(1)
 
 def main():
-
+    """Main function to fetch and display ontology information."""
     if len(sys.argv) != 3:
-        print("Usage: python script_name.py <ontology_id> <output_format>")
+        logging.error("Usage: python script_name.py <ontology_id> <output_format>")
         sys.exit(1)
     
     onto_id = sys.argv[1]
