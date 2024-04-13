@@ -64,7 +64,7 @@ def display_information(response, output_read):
 def main():
     """Main function to fetch and display ontology information."""
     if len(sys.argv) != 3:
-        logging.error("Usage: python script_name.py <ontology_id> <output_format>")
+        logging.error("Usage: python ontology.py <ontology_id> <output_format>")
         sys.exit(1)
     
     onto_id = sys.argv[1]
