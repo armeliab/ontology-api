@@ -1,10 +1,11 @@
 import requests
 import sys
 import logging
+import json
 
 #constants
 API_URL = 'https://www.ebi.ac.uk/ols4/api/ontologies/{onto_id}'
-OUTPUT_FILE = 'machine.txt' #can change into other names
+OUTPUT_FILE = 'machine.txt'
 
 #configure logging
 logging.basicConfig(level=logging.INFO)
@@ -38,15 +39,18 @@ def display_information(response, output_read):
             print("Current status:", current_status)
 
         elif output_read == 'machine':
-            # Create a list with the variables
-            info_list = [title, description, num_of_terms, current_status]
-            
-            # Write information into a text file
+            #create a list with the variables
+            info_dict = {
+                'title': title,
+                'description': description,
+                'numberOfTerms': num_of_terms,
+                'status': current_status
+            }
+            print(info_dict)
+            #write information into a json file
             with open(OUTPUT_FILE, "w") as f:
-                category = ['title', 'description', 'numberOfTerms', 'status']
-                for key, value in zip(category, info_list):
-                    f.write(f"{key}: {value}\n")
-                    print(f"{key}: {value}")
+                json.dump(info_dict, f, indent=4)
+                print(f"Machine-readable information has been saved to {OUTPUT_FILE}")
         else:
             logging.error("Invalid output format specified. Please use 'human' or 'machine'.")
             sys.exit(1)
